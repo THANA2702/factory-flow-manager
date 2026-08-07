@@ -15,8 +15,8 @@ export interface StockItem {
   quantity: number;
   unit: string;
   location: string;
-  palette?: string;
-  lot?: string;
+  palette?: string | undefined;
+  lot?: string | undefined;
 }
 
 export type TransactionType = "receive" | "issue";
@@ -43,7 +43,7 @@ export interface Shipment {
   quantity: number;
   eta: string;
   status: ShipmentStatus;
-  verifiedAt?: string;
+  verifiedAt?: string | undefined;
 }
 
 /* ---------- ระบบจัดการข้อมูลผลิตภัณฑ์ / สูตรการผลิต ---------- */
