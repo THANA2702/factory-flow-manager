@@ -108,7 +108,7 @@ export function ProductsBomPage() {
       </nav>
 
       {toast ? (
-        <div className="rounded-xl bg-success/15 px-4 py-3 text-sm font-medium text-success-foreground">
+        <div className="rounded-xl bg-success/20 px-4 py-3 text-sm font-medium text-foreground">
           {toast}
         </div>
       ) : null}
