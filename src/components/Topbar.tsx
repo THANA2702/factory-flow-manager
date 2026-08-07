@@ -33,22 +33,23 @@ export function Topbar({ onToggleSidebar }: { onToggleSidebar: () => void }) {
       <div className="flex items-center gap-4">
         <label className="flex items-center gap-2 rounded-xl border border-input bg-card px-3 py-1.5">
           <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-          <span className="hidden text-right leading-tight sm:block">
-            <span className="block text-[12px] font-semibold">{role}</span>
-            <span className="block text-[10px] text-muted-foreground">{roleLabels[role]}</span>
+          <span className="leading-tight">
+            <select
+              value={role}
+              onChange={(e) => setRole(e.target.value as Role)}
+              aria-label="เลือกบทบาทผู้ใช้"
+              className="bg-transparent text-[12px] font-semibold outline-none"
+            >
+              {(Object.keys(roleLabels) as Role[]).map((r) => (
+                <option key={r} value={r}>
+                  {r}
+                </option>
+              ))}
+            </select>
+            <span className="hidden pl-1 text-[10px] text-muted-foreground sm:block">
+              {roleLabels[role]}
+            </span>
           </span>
-          <select
-            value={role}
-            onChange={(e) => setRole(e.target.value as Role)}
-            aria-label="เลือกบทบาทผู้ใช้"
-            className="bg-transparent text-xs outline-none"
-          >
-            {(Object.keys(roleLabels) as Role[]).map((r) => (
-              <option key={r} value={r}>
-                {r}
-              </option>
-            ))}
-          </select>
         </label>
 
         <button type="button" aria-label="การแจ้งเตือน" className="relative rounded-lg p-1.5 hover:bg-muted">
