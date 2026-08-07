@@ -236,7 +236,6 @@ export function WarehousePage() {
         open={Boolean(verifying)}
         onClose={() => setVerifyId(null)}
         title={"ตรวจสอบความถูกต้อง\nก่อนจัดส่ง"}
-        onCloseCapture={undefined}
         footer={
           <>
             <button
