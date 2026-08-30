@@ -210,7 +210,7 @@ export function WarehousePage() {
           onChange={(e) => setForm({ ...form, name: e.target.value })}
         />
         <Field
-          placeholder="จำนวน (เช่น +500 kg)"
+          placeholder="จำนวน (+5000 ขวด)"
           value={form.quantity}
           onChange={(e) => setForm({ ...form, quantity: e.target.value })}
         />
