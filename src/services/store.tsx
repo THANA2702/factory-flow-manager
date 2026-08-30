@@ -30,6 +30,7 @@ interface StoreValue {
     productCode: string;
     productName: string;
     materials: string;
+    steps: string;
     machines: string;
     category: string;
     version: string;
