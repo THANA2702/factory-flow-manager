@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Boxes, Truck, Warehouse } from "lucide-react";
+import { Boxes, Plus, Truck, Warehouse } from "lucide-react";
 import { Modal } from "@/components/Modal";
 import { Field, SelectField } from "@/components/Field";
 import { StatusBadge } from "@/components/StatusBadge";
@@ -23,12 +23,15 @@ const emptyForm = {
 };
 
 export function WarehousePage() {
-  const { stock, shipments, submitTransaction, verifyShipment, transactions } = useStore();
+  const { stock, shipments, submitTransaction, verifyShipment, addShipment, transactions } = useStore();
   const [formOpen, setFormOpen] = useState(false);
   const [form, setForm] = useState(emptyForm);
   const [error, setError] = useState("");
   const [toast, setToast] = useState("");
   const [verifyId, setVerifyId] = useState<string | null>(null);
+  const [shipOpen, setShipOpen] = useState(false);
+  const emptyShip = { customer: "", productName: "", quantity: "", eta: "" };
+  const [shipForm, setShipForm] = useState(emptyShip);
 
   const verifying = useMemo(() => shipments.find((s) => s.id === verifyId), [shipments, verifyId]);
 
@@ -120,10 +123,22 @@ export function WarehousePage() {
         </section>
 
         <section className="surface-card p-5">
-          <h2 className="flex items-center gap-2 text-sm font-semibold">
-            <Truck className="h-4 w-4 text-primary" />
-            รายการจัดส่ง
-          </h2>
+          <div className="flex items-center justify-between gap-2">
+            <h2 className="flex items-center gap-2 text-sm font-semibold">
+              <Truck className="h-4 w-4 text-primary" />
+              รายการจัดส่ง
+            </h2>
+            <button
+              type="button"
+              onClick={() => {
+                setShipForm(emptyShip);
+                setShipOpen(true);
+              }}
+              className="flex items-center gap-1 rounded-full bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground transition-opacity hover:opacity-90"
+            >
+              <Plus className="h-3.5 w-3.5" /> รายการจัดส่ง
+            </button>
+          </div>
 
           <div className="mt-4 space-y-3">
             {shipments.map((sh) => (
@@ -230,6 +245,64 @@ export function WarehousePage() {
           onChange={(e) => setForm({ ...form, lot: e.target.value })}
         />
         {error ? <p className="pl-1 text-sm font-medium text-destructive">{error}</p> : null}
+      </Modal>
+
+      <Modal
+        open={shipOpen}
+        onClose={() => setShipOpen(false)}
+        title="เพิ่มรายการจัดส่ง"
+        subtitle="กรอกรายละเอียดการจัดส่ง"
+        footer={
+          <>
+            <button
+              type="button"
+              onClick={() => setShipOpen(false)}
+              className="text-sm font-semibold text-primary"
+            >
+              ยกเลิก
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                if (!shipForm.customer || !shipForm.productName || !shipForm.quantity) return;
+                addShipment({
+                  customer: shipForm.customer,
+                  productName: shipForm.productName,
+                  quantity: Number(shipForm.quantity.replace(/[^\d.]/g, "")),
+                  eta: shipForm.eta,
+                });
+                setShipOpen(false);
+                setToast("เพิ่มรายการจัดส่งแล้ว สถานะ “รอตรวจ”");
+                window.setTimeout(() => setToast(""), 3000);
+              }}
+              className="rounded-full bg-primary px-6 py-2 text-sm font-semibold text-primary-foreground"
+            >
+              บันทึก
+            </button>
+          </>
+        }
+      >
+        <Field
+          placeholder="ชื่อบริษัทที่จัดส่ง"
+          value={shipForm.customer}
+          onChange={(e) => setShipForm({ ...shipForm, customer: e.target.value })}
+        />
+        <Field
+          placeholder="ชนิดขวด"
+          value={shipForm.productName}
+          onChange={(e) => setShipForm({ ...shipForm, productName: e.target.value })}
+        />
+        <Field
+          placeholder="จำนวน"
+          value={shipForm.quantity}
+          onChange={(e) => setShipForm({ ...shipForm, quantity: e.target.value })}
+        />
+        <Field
+          label="วันที่จัดส่ง"
+          type="date"
+          value={shipForm.eta}
+          onChange={(e) => setShipForm({ ...shipForm, eta: e.target.value })}
+        />
       </Modal>
 
       <Modal

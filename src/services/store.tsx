@@ -26,6 +26,7 @@ interface StoreValue {
     lot: string;
   }) => { ok: boolean; message: string };
   verifyShipment: (id: string) => void;
+  addShipment: (input: { customer: string; productName: string; quantity: number; eta: string }) => void;
   addBom: (input: {
     productCode: string;
     productName: string;
@@ -141,6 +142,21 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     );
   }, []);
 
+  const addShipment = useCallback<StoreValue["addShipment"]>((input) => {
+    setShipments((prev) => [
+      {
+        id: `h${Date.now()}`,
+        code: `SHP-${500 + prev.length + 1}`,
+        customer: input.customer,
+        productName: input.productName,
+        quantity: input.quantity,
+        eta: input.eta ? new Date(input.eta).toLocaleDateString("th-TH") : "รอกำหนด",
+        status: "pending",
+      },
+      ...prev,
+    ]);
+  }, []);
+
   const addBom = useCallback<StoreValue["addBom"]>((input) => {
     setBoms((prev) => [
       {
@@ -199,11 +215,12 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       boms,
       submitTransaction,
       verifyShipment,
+      addShipment,
       addBom,
       setBomStatus,
       addProduct,
     }),
-    [stock, transactions, shipments, products, boms, submitTransaction, verifyShipment, addBom, setBomStatus, addProduct],
+    [stock, transactions, shipments, products, boms, submitTransaction, verifyShipment, addShipment, addBom, setBomStatus, addProduct],
   );
 
   return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>;
