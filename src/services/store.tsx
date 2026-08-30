@@ -30,6 +30,7 @@ interface StoreValue {
     productCode: string;
     productName: string;
     materials: string;
+    steps: string;
     machines: string;
     category: string;
     version: string;
@@ -154,6 +155,10 @@ export function StoreProvider({ children }: { children: ReactNode }) {
           .map((m) => m.trim())
           .filter(Boolean)
           .map((m) => ({ name: m, amount: "-" })),
+        steps: input.steps
+          .split("\n")
+          .map((s) => s.trim())
+          .filter(Boolean),
         machines: input.machines
           .split(",")
           .map((m) => m.trim())

@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { Check, History, Network, Plus, X } from "lucide-react";
 import { Modal } from "@/components/Modal";
-import { Field, SelectField } from "@/components/Field";
+import { Field, SelectField, TextareaField } from "@/components/Field";
 import { StatusBadge } from "@/components/StatusBadge";
 import { useStore } from "@/services/store";
 import type { BomStatus } from "@/interfaces";
@@ -31,6 +31,7 @@ export function ProductsBomPage() {
     productCode: "",
     productName: "",
     materials: "",
+    steps: "",
     machines: "",
     category: categories[0]!,
     version: "v1",
@@ -138,6 +139,17 @@ export function ProductsBomPage() {
                   </li>
                 ))}
               </ul>
+
+              {bom.steps && bom.steps.length > 0 ? (
+                <>
+                  <p className="mt-4 text-xs text-muted-foreground">ขั้นตอนการผลิต</p>
+                  <ol className="mt-1 list-decimal space-y-1 pl-5 text-sm">
+                    {bom.steps.map((step, i) => (
+                      <li key={`${bom.id}-step-${i}`}>{step}</li>
+                    ))}
+                  </ol>
+                </>
+              ) : null}
 
               <div className="mt-3 flex flex-wrap gap-2">
                 {bom.machines.map((m) => (
@@ -265,6 +277,7 @@ export function ProductsBomPage() {
                   productCode: "",
                   productName: "",
                   materials: "",
+                  steps: "",
                   machines: "",
                   category: categories[0]!,
                   version: "v1",
@@ -291,6 +304,12 @@ export function ProductsBomPage() {
           placeholder="วัตถุดิบ"
           value={bomForm.materials}
           onChange={(e) => setBomForm({ ...bomForm, materials: e.target.value })}
+        />
+        <TextareaField
+          label="ขั้นตอนการผลิต"
+          placeholder="ขั้นตอนการผลิต (กด Enter เพื่อเพิ่มบรรทัด)"
+          value={bomForm.steps}
+          onChange={(e) => setBomForm({ ...bomForm, steps: e.target.value })}
         />
         <Field
           placeholder="เครื่องจักร"

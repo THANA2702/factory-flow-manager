@@ -72,6 +72,7 @@ export interface Bom {
   category: string;
   materials: BomMaterial[];
   machines: string[];
+  steps?: string[] | undefined;
   status: BomStatus;
   updatedBy: string;
   updatedAt: string;
