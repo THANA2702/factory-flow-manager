@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { Check, History, Network, Plus, X } from "lucide-react";
 import { Modal } from "@/components/Modal";
-import { Field, SelectField } from "@/components/Field";
+import { Field, SelectField, TextareaField } from "@/components/Field";
 import { StatusBadge } from "@/components/StatusBadge";
 import { useStore } from "@/services/store";
 import type { BomStatus } from "@/interfaces";
@@ -31,6 +31,7 @@ export function ProductsBomPage() {
     productCode: "",
     productName: "",
     materials: "",
+    steps: "",
     machines: "",
     category: categories[0]!,
     version: "v1",
