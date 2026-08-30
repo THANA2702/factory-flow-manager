@@ -5,6 +5,18 @@ import type { Bom, Product, Shipment, StockItem, StockTransaction } from "@/inte
  */
 export const BASE_URL = "/api";
 
+/** วัตถุดิบต้นแบบ — ในระบบจริงดึงจากฐานข้อมูลวัตถุดิบ */
+export const materialOptions: string[] = [
+  "เม็ดพลาสติก PET",
+  "เม็ดพลาสติก HDPE",
+  "ฝาเกลียว",
+  "ฉลากสินค้า",
+  "สีพิมพ์",
+  "กาวลามิเนต",
+  "ฟิล์มหด",
+  "กล่องกระดาษลูกฟูก",
+];
+
 export const seedStock: StockItem[] = [
   { id: "s1", code: "FG-001", name: "ขวด PET 500ml", quantity: 18392, unit: "ขวด", location: "A-01" },
   { id: "s2", code: "FG-002", name: "ขวด PET 1L", quantity: 9240, unit: "ขวด", location: "A-02" },

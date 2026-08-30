@@ -29,7 +29,7 @@ interface StoreValue {
   addBom: (input: {
     productCode: string;
     productName: string;
-    materials: string;
+    materials: string[];
     steps: string;
     machines: string;
     category: string;
@@ -150,11 +150,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         productName: input.productName,
         version: input.version || "v1",
         category: input.category,
-        materials: input.materials
-          .split(",")
-          .map((m) => m.trim())
-          .filter(Boolean)
-          .map((m) => ({ name: m, amount: "-" })),
+        materials: input.materials.map((m) => ({ name: m, amount: "-" })),
         steps: input.steps
           .split("\n")
           .map((s) => s.trim())

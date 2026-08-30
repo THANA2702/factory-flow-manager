@@ -6,6 +6,7 @@ import { StatusBadge } from "@/components/StatusBadge";
 import { useStore } from "@/services/store";
 import type { BomStatus } from "@/interfaces";
 import { cn } from "@/lib/utils";
+import { materialOptions } from "@/services/https/api";
 
 type Tab = "products" | "boms" | "approvals";
 
@@ -30,7 +31,7 @@ export function ProductsBomPage() {
   const [bomForm, setBomForm] = useState({
     productCode: "",
     productName: "",
-    materials: "",
+    materials: [] as string[],
     steps: "",
     machines: "",
     category: categories[0]!,
@@ -276,7 +277,7 @@ export function ProductsBomPage() {
                 setBomForm({
                   productCode: "",
                   productName: "",
-                  materials: "",
+                  materials: [] as string[],
                   steps: "",
                   machines: "",
                   category: categories[0]!,
@@ -300,11 +301,48 @@ export function ProductsBomPage() {
           value={bomForm.productName}
           onChange={(e) => setBomForm({ ...bomForm, productName: e.target.value })}
         />
-        <Field
-          placeholder="วัตถุดิบ"
-          value={bomForm.materials}
-          onChange={(e) => setBomForm({ ...bomForm, materials: e.target.value })}
-        />
+        <div className="space-y-2">
+          <SelectField
+            label="วัตถุดิบ"
+            value=""
+            onChange={(e) => {
+              const material = e.target.value;
+              if (!material || bomForm.materials.includes(material)) return;
+              setBomForm({ ...bomForm, materials: [...bomForm.materials, material] });
+            }}
+          >
+            <option value="" disabled>
+              เลือกวัตถุดิบ
+            </option>
+            {materialOptions.map((m) => (
+              <option key={m} value={m}>
+                {m}
+              </option>
+            ))}
+          </SelectField>
+          {bomForm.materials.length > 0 ? (
+            <div className="flex flex-wrap gap-2 pl-1">
+              {bomForm.materials.map((m) => (
+                <span
+                  key={m}
+                  className="flex items-center gap-1 rounded-full border border-input bg-card px-3 py-1 text-xs font-medium"
+                >
+                  {m}
+                  <button
+                    type="button"
+                    aria-label={`ลบ ${m}`}
+                    onClick={() =>
+                      setBomForm({ ...bomForm, materials: bomForm.materials.filter((x) => x !== m) })
+                    }
+                    className="text-muted-foreground hover:text-destructive"
+                  >
+                    <X className="h-3 w-3" />
+                  </button>
+                </span>
+              ))}
+            </div>
+          ) : null}
+        </div>
         <TextareaField
           label="ขั้นตอนการผลิต"
           placeholder="ขั้นตอนการผลิต (กด Enter เพื่อเพิ่มบรรทัด)"
