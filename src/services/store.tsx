@@ -119,6 +119,30 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     ]);
   }, []);
 
+  const updateShipment = useCallback<StoreValue["updateShipment"]>((id, input) => {
+    setShipments((prev) =>
+      prev.map((s) =>
+        s.id === id
+          ? {
+              ...s,
+              customer: input.customer,
+              productName: input.productName,
+              quantity: input.quantity,
+              eta: input.eta
+                ? /^\d{4}-\d{2}-\d{2}$/.test(input.eta)
+                  ? new Date(input.eta).toLocaleDateString("th-TH")
+                  : input.eta
+                : s.eta,
+            }
+          : s,
+      ),
+    );
+  }, []);
+
+  const deleteShipment = useCallback((id: string) => {
+    setShipments((prev) => prev.filter((s) => s.id !== id));
+  }, []);
+
   const addBom = useCallback<StoreValue["addBom"]>((input) => {
     setBoms((prev) => [
       {
@@ -178,11 +202,13 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       submitTransaction,
       verifyShipment,
       addShipment,
+      updateShipment,
+      deleteShipment,
       addBom,
       setBomStatus,
       addProduct,
     }),
-    [stock, transactions, shipments, products, boms, submitTransaction, verifyShipment, addShipment, addBom, setBomStatus, addProduct],
+    [stock, transactions, shipments, products, boms, submitTransaction, verifyShipment, addShipment, updateShipment, deleteShipment, addBom, setBomStatus, addProduct],
   );
 
   return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>;
