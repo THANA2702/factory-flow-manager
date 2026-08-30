@@ -6,6 +6,7 @@ import { StatusBadge } from "@/components/StatusBadge";
 import { useStore } from "@/services/store";
 import type { BomStatus } from "@/interfaces";
 import { cn } from "@/lib/utils";
+import { materialOptions } from "@/services/https/api";
 
 type Tab = "products" | "boms" | "approvals";
 
@@ -30,7 +31,7 @@ export function ProductsBomPage() {
   const [bomForm, setBomForm] = useState({
     productCode: "",
     productName: "",
-    materials: "",
+    materials: [] as string[],
     steps: "",
     machines: "",
     category: categories[0]!,
@@ -276,7 +277,7 @@ export function ProductsBomPage() {
                 setBomForm({
                   productCode: "",
                   productName: "",
-                  materials: "",
+                  materials: [] as string[],
                   steps: "",
                   machines: "",
                   category: categories[0]!,
