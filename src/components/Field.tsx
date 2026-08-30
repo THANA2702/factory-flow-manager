@@ -10,6 +10,18 @@ export function Field({
   );
 }
 
+export function TextareaField({
+  label,
+  ...props
+}: React.TextareaHTMLAttributes<HTMLTextAreaElement> & { label?: string }) {
+  return (
+    <div className="space-y-1">
+      {label ? <span className="block pl-1 text-[11px] text-muted-foreground">{label}</span> : null}
+      <textarea className="field-input min-h-24 resize-y" {...props} />
+    </div>
+  );
+}
+
 export function SelectField({
   label,
   children,
