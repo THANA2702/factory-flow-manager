@@ -1,5 +1,5 @@
 import { useCallback, useContext, useMemo, useState, type ReactNode } from "react";
-import type { Bom, Product, Shipment, StockItem, StockTransaction } from "@/interfaces";
+import type { Bom, BomStatus, Product, Shipment, StockItem, StockTransaction } from "@/interfaces";
 import { StoreContext, type StoreValue } from "@/services/store-context";
 import { seedBoms, seedProducts, seedShipments, seedStock } from "@/services/https/api";
 
