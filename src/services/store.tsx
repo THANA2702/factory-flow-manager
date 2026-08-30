@@ -215,11 +215,12 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       boms,
       submitTransaction,
       verifyShipment,
+      addShipment,
       addBom,
       setBomStatus,
       addProduct,
     }),
-    [stock, transactions, shipments, products, boms, submitTransaction, verifyShipment, addBom, setBomStatus, addProduct],
+    [stock, transactions, shipments, products, boms, submitTransaction, verifyShipment, addShipment, addBom, setBomStatus, addProduct],
   );
 
   return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>;
