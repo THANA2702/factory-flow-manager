@@ -140,6 +140,17 @@ export function ProductsBomPage() {
                 ))}
               </ul>
 
+              {bom.steps && bom.steps.length > 0 ? (
+                <>
+                  <p className="mt-4 text-xs text-muted-foreground">ขั้นตอนการผลิต</p>
+                  <ol className="mt-1 list-decimal space-y-1 pl-5 text-sm">
+                    {bom.steps.map((step, i) => (
+                      <li key={`${bom.id}-step-${i}`}>{step}</li>
+                    ))}
+                  </ol>
+                </>
+              ) : null}
+
               <div className="mt-3 flex flex-wrap gap-2">
                 {bom.machines.map((m) => (
                   <span
