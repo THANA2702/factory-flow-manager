@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Boxes, Truck, Warehouse } from "lucide-react";
+import { Boxes, Plus, Truck, Warehouse } from "lucide-react";
 import { Modal } from "@/components/Modal";
 import { Field, SelectField } from "@/components/Field";
 import { StatusBadge } from "@/components/StatusBadge";
@@ -23,12 +23,15 @@ const emptyForm = {
 };
 
 export function WarehousePage() {
-  const { stock, shipments, submitTransaction, verifyShipment, transactions } = useStore();
+  const { stock, shipments, submitTransaction, verifyShipment, addShipment, transactions } = useStore();
   const [formOpen, setFormOpen] = useState(false);
   const [form, setForm] = useState(emptyForm);
   const [error, setError] = useState("");
   const [toast, setToast] = useState("");
   const [verifyId, setVerifyId] = useState<string | null>(null);
+  const [shipOpen, setShipOpen] = useState(false);
+  const emptyShip = { customer: "", productName: "", quantity: "", eta: "" };
+  const [shipForm, setShipForm] = useState(emptyShip);
 
   const verifying = useMemo(() => shipments.find((s) => s.id === verifyId), [shipments, verifyId]);
 
@@ -120,10 +123,22 @@ export function WarehousePage() {
         </section>
 
         <section className="surface-card p-5">
-          <h2 className="flex items-center gap-2 text-sm font-semibold">
-            <Truck className="h-4 w-4 text-primary" />
-            รายการจัดส่ง
-          </h2>
+          <div className="flex items-center justify-between gap-2">
+            <h2 className="flex items-center gap-2 text-sm font-semibold">
+              <Truck className="h-4 w-4 text-primary" />
+              รายการจัดส่ง
+            </h2>
+            <button
+              type="button"
+              onClick={() => {
+                setShipForm(emptyShip);
+                setShipOpen(true);
+              }}
+              className="flex items-center gap-1 rounded-full bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground transition-opacity hover:opacity-90"
+            >
+              <Plus className="h-3.5 w-3.5" /> รายการจัดส่ง
+            </button>
+          </div>
 
           <div className="mt-4 space-y-3">
             {shipments.map((sh) => (
