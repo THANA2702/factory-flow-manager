@@ -248,6 +248,64 @@ export function WarehousePage() {
       </Modal>
 
       <Modal
+        open={shipOpen}
+        onClose={() => setShipOpen(false)}
+        title="เพิ่มรายการจัดส่ง"
+        subtitle="กรอกรายละเอียดการจัดส่ง"
+        footer={
+          <>
+            <button
+              type="button"
+              onClick={() => setShipOpen(false)}
+              className="text-sm font-semibold text-primary"
+            >
+              ยกเลิก
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                if (!shipForm.customer || !shipForm.productName || !shipForm.quantity) return;
+                addShipment({
+                  customer: shipForm.customer,
+                  productName: shipForm.productName,
+                  quantity: Number(shipForm.quantity.replace(/[^\d.]/g, "")),
+                  eta: shipForm.eta,
+                });
+                setShipOpen(false);
+                setToast("เพิ่มรายการจัดส่งแล้ว สถานะ “รอตรวจ”");
+                window.setTimeout(() => setToast(""), 3000);
+              }}
+              className="rounded-full bg-primary px-6 py-2 text-sm font-semibold text-primary-foreground"
+            >
+              บันทึก
+            </button>
+          </>
+        }
+      >
+        <Field
+          placeholder="ชื่อบริษัทที่จัดส่ง"
+          value={shipForm.customer}
+          onChange={(e) => setShipForm({ ...shipForm, customer: e.target.value })}
+        />
+        <Field
+          placeholder="ชนิดขวด"
+          value={shipForm.productName}
+          onChange={(e) => setShipForm({ ...shipForm, productName: e.target.value })}
+        />
+        <Field
+          placeholder="จำนวน"
+          value={shipForm.quantity}
+          onChange={(e) => setShipForm({ ...shipForm, quantity: e.target.value })}
+        />
+        <Field
+          label="วันที่จัดส่ง"
+          type="date"
+          value={shipForm.eta}
+          onChange={(e) => setShipForm({ ...shipForm, eta: e.target.value })}
+        />
+      </Modal>
+
+      <Modal
         open={Boolean(verifying)}
         onClose={() => setVerifyId(null)}
         title={"ตรวจสอบความถูกต้อง\nก่อนจัดส่ง"}
