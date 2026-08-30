@@ -266,6 +266,7 @@ export function ProductsBomPage() {
                   productCode: "",
                   productName: "",
                   materials: "",
+                  steps: "",
                   machines: "",
                   category: categories[0]!,
                   version: "v1",
@@ -292,6 +293,12 @@ export function ProductsBomPage() {
           placeholder="วัตถุดิบ"
           value={bomForm.materials}
           onChange={(e) => setBomForm({ ...bomForm, materials: e.target.value })}
+        />
+        <TextareaField
+          label="ขั้นตอนการผลิต"
+          placeholder="ขั้นตอนการผลิต (กด Enter เพื่อเพิ่มบรรทัด)"
+          value={bomForm.steps}
+          onChange={(e) => setBomForm({ ...bomForm, steps: e.target.value })}
         />
         <Field
           placeholder="เครื่องจักร"
