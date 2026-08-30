@@ -1,46 +1,8 @@
-import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from "react";
-import type {
-  Bom,
-  BomStatus,
-  Product,
-  Shipment,
-  StockItem,
-  StockTransaction,
-  TransactionType,
-} from "@/interfaces";
+import { useCallback, useMemo, useState, type ReactNode } from "react";
+import type { Bom, Product, Shipment, StockItem, StockTransaction } from "@/interfaces";
+import { StoreContext, type StoreValue } from "@/services/store-context";
 import { seedBoms, seedProducts, seedShipments, seedStock } from "@/services/https/api";
 
-interface StoreValue {
-  stock: StockItem[];
-  transactions: StockTransaction[];
-  shipments: Shipment[];
-  products: Product[];
-  boms: Bom[];
-  submitTransaction: (input: {
-    type: TransactionType;
-    code: string;
-    name: string;
-    quantity: number;
-    location: string;
-    palette: string;
-    lot: string;
-  }) => { ok: boolean; message: string };
-  verifyShipment: (id: string) => void;
-  addShipment: (input: { customer: string; productName: string; quantity: number; eta: string }) => void;
-  addBom: (input: {
-    productCode: string;
-    productName: string;
-    materials: string[];
-    steps: string;
-    machines: string;
-    category: string;
-    version: string;
-  }) => void;
-  setBomStatus: (id: string, status: BomStatus) => void;
-  addProduct: (input: { code: string; name: string; category: string; bomVersion: string }) => void;
-}
-
-const StoreContext = createContext<StoreValue | null>(null);
 
 export function StoreProvider({ children }: { children: ReactNode }) {
   const [stock, setStock] = useState<StockItem[]>(seedStock);
