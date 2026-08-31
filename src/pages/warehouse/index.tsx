@@ -133,6 +133,7 @@ export function WarehousePage() {
             <button
               type="button"
               onClick={() => {
+                setEditingId(null);
                 setShipForm(emptyShip);
                 setShipOpen(true);
               }}
@@ -306,14 +307,20 @@ export function WarehousePage() {
 
       <Modal
         open={shipOpen}
-        onClose={() => setShipOpen(false)}
-        title="เพิ่มรายการจัดส่ง"
+        onClose={() => {
+          setShipOpen(false);
+          setEditingId(null);
+        }}
+        title={editingId ? "แก้ไขรายการจัดส่ง" : "เพิ่มรายการจัดส่ง"}
         subtitle="กรอกรายละเอียดการจัดส่ง"
         footer={
           <>
             <button
               type="button"
-              onClick={() => setShipOpen(false)}
+              onClick={() => {
+                setShipOpen(false);
+                setEditingId(null);
+              }}
               className="text-sm font-semibold text-primary"
             >
               ยกเลิก
@@ -322,20 +329,30 @@ export function WarehousePage() {
               type="button"
               onClick={() => {
                 if (!shipForm.customer || !shipForm.productName || !shipForm.quantity) return;
-                addShipment({
+                const payload = {
                   customer: shipForm.customer,
                   productName: shipForm.productName,
                   quantity: Number(shipForm.quantity.replace(/[^\d.]/g, "")),
                   eta: shipForm.eta,
-                });
+                };
+                if (editingId) {
+                  updateShipment(editingId, payload);
+                  setToast("แก้ไขรายการจัดส่งแล้ว");
+                } else {
+                  addShipment(payload);
+                  setToast("เพิ่มรายการจัดส่งแล้ว สถานะ “รอตรวจ”");
+                }
                 setShipOpen(false);
-                setToast("เพิ่มรายการจัดส่งแล้ว สถานะ “รอตรวจ”");
+                setEditingId(null);
                 window.setTimeout(() => setToast(""), 3000);
               }}
               className="rounded-full bg-primary px-6 py-2 text-sm font-semibold text-primary-foreground"
             >
               บันทึก
             </button>
+          </>
+        }
+
           </>
         }
       >
