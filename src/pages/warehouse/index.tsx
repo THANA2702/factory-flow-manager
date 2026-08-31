@@ -352,9 +352,6 @@ export function WarehousePage() {
             </button>
           </>
         }
-
-          </>
-        }
       >
         <Field
           placeholder="ชื่อบริษัทที่จัดส่ง"
