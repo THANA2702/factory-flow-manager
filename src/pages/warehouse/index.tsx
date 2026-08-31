@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Boxes, Plus, Truck, Warehouse } from "lucide-react";
+import { Boxes, MoreVertical, Pencil, Plus, Trash2, Truck, Warehouse } from "lucide-react";
 import { Modal } from "@/components/Modal";
 import { Field, SelectField } from "@/components/Field";
 import { StatusBadge } from "@/components/StatusBadge";
@@ -23,13 +23,15 @@ const emptyForm = {
 };
 
 export function WarehousePage() {
-  const { stock, shipments, submitTransaction, verifyShipment, addShipment, transactions } = useStore();
+  const { stock, shipments, submitTransaction, verifyShipment, addShipment, updateShipment, deleteShipment, transactions } = useStore();
   const [formOpen, setFormOpen] = useState(false);
   const [form, setForm] = useState(emptyForm);
   const [error, setError] = useState("");
   const [toast, setToast] = useState("");
   const [verifyId, setVerifyId] = useState<string | null>(null);
   const [shipOpen, setShipOpen] = useState(false);
+  const [menuId, setMenuId] = useState<string | null>(null);
+  const [editingId, setEditingId] = useState<string | null>(null);
   const emptyShip = { customer: "", productName: "", quantity: "", eta: "" };
   const [shipForm, setShipForm] = useState(emptyShip);
 
@@ -142,13 +144,17 @@ export function WarehousePage() {
 
           <div className="mt-4 space-y-3">
             {shipments.map((sh) => (
-              <button
+              <div
                 key={sh.id}
-                type="button"
+                role="button"
+                tabIndex={0}
                 onClick={() => setVerifyId(sh.id)}
-                className="w-full rounded-2xl bg-secondary p-4 text-left transition-colors hover:bg-accent"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") setVerifyId(sh.id);
+                }}
+                className="relative w-full cursor-pointer rounded-2xl bg-secondary p-4 text-left transition-colors hover:bg-accent"
               >
-                <div className="flex items-start justify-between gap-2">
+                <div className="flex items-start justify-between gap-2 pr-8">
                   <p className="font-bold">{sh.customer}</p>
                   <StatusBadge tone={statusMeta[sh.status].tone}>
                     {statusMeta[sh.status].label}
@@ -158,8 +164,59 @@ export function WarehousePage() {
                   {sh.code} • {sh.productName} × {sh.quantity.toLocaleString("th-TH")}
                 </p>
                 <p className="mt-1 text-xs font-medium text-primary">ETA: {sh.eta}</p>
-              </button>
+
+                <div className="absolute right-2 top-2">
+                  <button
+                    type="button"
+                    aria-label="ตัวเลือก"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setMenuId(menuId === sh.id ? null : sh.id);
+                    }}
+                    className="rounded-full p-1.5 text-muted-foreground transition-colors hover:bg-card hover:text-foreground"
+                  >
+                    <MoreVertical className="h-4 w-4" />
+                  </button>
+
+                  {menuId === sh.id ? (
+                    <div className="absolute right-0 z-20 mt-1 w-32 overflow-hidden rounded-xl border border-border bg-card shadow-lg">
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setMenuId(null);
+                          setEditingId(sh.id);
+                          setShipForm({
+                            customer: sh.customer,
+                            productName: sh.productName,
+                            quantity: String(sh.quantity),
+                            eta: sh.eta,
+                          });
+                          setShipOpen(true);
+                        }}
+                        className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm transition-colors hover:bg-muted"
+                      >
+                        <Pencil className="h-3.5 w-3.5" /> แก้ไข
+                      </button>
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setMenuId(null);
+                          deleteShipment(sh.id);
+                          setToast("ลบรายการจัดส่งแล้ว");
+                          window.setTimeout(() => setToast(""), 3000);
+                        }}
+                        className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-destructive transition-colors hover:bg-muted"
+                      >
+                        <Trash2 className="h-3.5 w-3.5" /> ลบ
+                      </button>
+                    </div>
+                  ) : null}
+                </div>
+              </div>
             ))}
+
           </div>
         </section>
       </div>
